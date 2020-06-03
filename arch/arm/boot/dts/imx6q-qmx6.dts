@@ -1,0 +1,64 @@
+/*
+ * Copyright 2015 congatec AG
+ * Copyright 2012 Freescale Semiconductor, Inc.
+ * Copyright 2011 Linaro Ltd.
+ *
+ * The code contained herein is licensed under the GNU General Public
+ * License. You may obtain a copy of the GNU General Public License
+ * Version 2 or later at the following locations:
+ *
+ * http://www.opensource.org/licenses/gpl-license.html
+ * http://www.gnu.org/copyleft/gpl.html
+ */
+
+/dts-v1/;
+
+#include "imx6q.dtsi"
+#include "imx6qdl-qmx6.dtsi"
+
+/ {
+	model = "conga-QMX6 Board (i.MX6 Dual/Quad)";
+	compatible = "fsl,imx6q-qmx6", "fsl,imx6q";
+
+	reserved-memory {
+		linux,cma {
+			/*
+			 * Limit the allowed range for contiguous memory area (CMA)
+			 * to the first 2GB of the physical RAM because iMX6
+			 * graphics hardware can only access memory in this range
+			 */
+			alloc-ranges = <0x0 0x80000000>;
+		};
+	};
+};
+
+&ldb {
+	lvds-channel@0 {
+		crtc = "ipu2-di0";
+	};
+
+	lvds-channel@1 {
+		crtc = "ipu2-di1";
+	};
+};
+
+&mxcfb1 {
+	status = "okay";
+};
+
+&mxcfb2 {
+	status = "okay";
+};
+
+&mxcfb4 {
+	status = "okay";
+};
+
+&sata {
+      fsl,transmit-level-mV = <1201>;
+      fsl,transmit-boost-mdB = <3330>;
+      fsl,transmit-atten-16ths = <9>;
+      fsl,receive-eq-mdB = <3000>;
+      fsl,no-spread-spectrum = <1>;
+      status = "okay";
+};
