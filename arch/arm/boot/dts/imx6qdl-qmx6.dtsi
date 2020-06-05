@@ -34,12 +34,12 @@
 			cabc-enable;
 			cabc-blt-enable;
 		};
-		
+
 		lvds1 {
 		};
-		
+
 	};
-	
+
 	regulators {
 		compatible = "simple-bus";
 		#address-cells = <1>;
@@ -84,7 +84,7 @@
 			regulator-max-microvolt = <3300000>;
 			regulator-always-on;
 		};
-		
+
 		reg_usb_otg_vbus: regulator@0 {
 			compatible = "regulator-fixed";
 			reg = <0>;
@@ -151,7 +151,7 @@
 				#address-cells = <1>;
 				#size-cells = <0>;
 
-				pmic: pfuze100@08 {
+				pmic: pfuze100@8 {
 					compatible = "fsl,pfuze100";
 					reg = <0x08>;
 
@@ -304,7 +304,7 @@
 			linux,code = <KEY_SEARCH>;
 		};
 	};
-	
+
 	sound {
 		compatible = "fsl,imx6q-qmx6-sgtl5000",
 			     "fsl,imx-audio-sgtl5000";
@@ -462,8 +462,8 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_i2c1>;
 	status = "okay";
-	
-	codec: sgtl5000@0a {
+
+	codec: sgtl5000@a {
 		compatible = "fsl,sgtl5000";
 		reg = <0x0a>;
 		clocks = <&clks 201>;
@@ -478,8 +478,8 @@
 	pinctrl-0 = <&pinctrl_i2c2>;
 	status = "okay";
 
-};	
-	
+};
+
 &i2c3 {
     clock-frequency = <100000>;
     pinctrl-names = "default";
@@ -632,7 +632,7 @@
                 MX6QDL_PAD_EIM_D27__UART2_RX_DATA 0x1b0b1
 			>;
 		};
-	
+
 		pinctrl_uart3_1: uart3grp-1 {
 			fsl,pins = <
                 MX6QDL_PAD_EIM_D25__UART3_RX_DATA 0x1b0b1
@@ -730,7 +730,7 @@
 &hdmi_cec {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_hdmi_cec>;
-	status = "disabled"; /* set to disabled because pin already used as Q7 GPIO */ 
+	status = "disabled"; /* set to disabled because pin already used as Q7 GPIO */
 };
 
 &hdmi_core {
