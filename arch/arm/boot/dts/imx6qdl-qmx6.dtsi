@@ -916,3 +916,15 @@
 	vmmc-supply = <&reg_3p3v>;
 	status = "okay";
 };
+
+&pcie {
+	/*
+		Added in Kernel 4.14.98: adjust PCIe-Phy Tx settings (CGT000005)
+	*/
+	fsl,tx-deemph-gen1 = <15>;
+	fsl,tx-deemph-gen2-3p5db = <15>;
+	fsl,tx-deemph-gen2-6db = <31>;
+	fsl,tx-swing-full = <127>;
+	fsl,tx-swing-low = <63>;
+	fsl,max-link-speed = <1>;
+};
