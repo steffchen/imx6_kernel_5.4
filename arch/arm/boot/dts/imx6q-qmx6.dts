@@ -62,3 +62,18 @@
       fsl,no-spread-spectrum = <1>;
       status = "okay";
 };
+
+&cpu0 {
+	/*
+		Improves the QMX6 reset and reboot behaviour for low CPU frequency condition (at 396MHz)
+	 	Introduced on Kernel 4.14.98 for QMX6 (CGT000003)
+	*/
+	operating-points = <
+		/* kHz    uV */
+		1200000 1275000
+		996000  1250000
+		852000  1250000
+		792000  1175000
+		396000  1175000
+	>;
+};
