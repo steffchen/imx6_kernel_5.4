@@ -109,7 +109,7 @@
 			compatible = "i2c-mux-gpio";
 			#address-cells = <1>;
 			#size-cells = <0>;
-			mux-gpios = <&gpio6 9 GPIO_ACTIVE_LOW>;
+			mux-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>;
 			i2c-parent = <&i2c2>;
 
 			i2c@0 {
@@ -919,7 +919,7 @@
 
 &pcie {
 	/*
-		Added in Kernel 4.14.98: adjust PCIe-Phy Tx settings (CGT000005)
+		Adjust PCIe-Phy Tx settings (Kernel 4.14.98: CGT000005)
 	*/
 	fsl,tx-deemph-gen1 = <15>;
 	fsl,tx-deemph-gen2-3p5db = <15>;
