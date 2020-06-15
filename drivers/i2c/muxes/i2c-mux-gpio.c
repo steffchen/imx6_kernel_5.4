@@ -235,7 +235,26 @@ static struct platform_driver i2c_mux_gpio_driver = {
 	},
 };
 
-module_platform_driver(i2c_mux_gpio_driver);
+/**
+	On conga-QMX6 there's a gpio multiplexer that splits the physical I2C2 bus
+	into two multiplexed I2C buses. Some of the devices on these buses have to be
+	available early in the boot stage (eg hdmi). This patch prefers the loadorder of the
+	i2c-mux-gpio driver in order to get early access to these devices.
+**/
+// module_platform_driver(i2c_mux_gpio_driver);
+static int __init i2c_mux_gpio_init(void)
+{
+	return platform_driver_register(&i2c_mux_gpio_driver);
+}
+subsys_initcall(i2c_mux_gpio_init);
+
+static void __exit i2c_mux_gpio_exit(void)
+{
+	platform_driver_unregister(&i2c_mux_gpio_driver);
+}
+
+module_exit(i2c_mux_gpio_exit);
+
 
 MODULE_DESCRIPTION("GPIO-based I2C multiplexer driver");
 MODULE_AUTHOR("Peter Korsgaard <peter.korsgaard@barco.com>");
