@@ -103,6 +103,15 @@
 			regulator-max-microvolt = <5000000>;
 			regulator-always-on;
 		};
+
+		reg_hdmi: regulator-hdmi {
+			compatible = "regulator-fixed";
+			regulator-name = "hdmi-5v-supply";
+			regulator-min-microvolt = <5000000>;
+			regulator-max-microvolt = <5000000>;
+			enable-active-high;
+			hdmi-5v-supply = <&swbst_reg>;
+		};
 	};
 
 	i2cmux {
@@ -742,6 +751,7 @@
 &hdmi_video {
 	fsl,phy_reg_vlev = <0x01ef>;
 	fsl,phy_reg_cksymtx = <0x800b>;
+	HDMI-supply = <&reg_hdmi>;
 	status = "okay";
 };
 
