@@ -27,19 +27,6 @@
 		mmc2 = &usdhc4;
 	};
 
-	hannstar_cabc {
-		compatible = "hannstar,cabc";
-
-		lvds0 {
-			gpios = <&gpio1 7 GPIO_ACTIVE_HIGH &gpio1 9 GPIO_ACTIVE_HIGH>;
-			cabc-enable;
-			cabc-blt-enable;
-		};
-
-		lvds1 {
-		};
-
-	};
 
 	regulators {
 		compatible = "simple-bus";
@@ -112,6 +99,24 @@
 			regulator-max-microvolt = <5000000>;
 			enable-active-high;
 			hdmi-5v-supply = <&swbst_reg>;
+		};
+
+		/* LVDS backlight power enable as regulator */
+		reg_lvds_ppen: lvds_ppen_pwr_on {
+			compatible = "regulator-fixed";
+			regulator-name = "lvds_ppen_pwr_on";
+			gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>; /* Q7-111: LVDS_PPEN */
+			enable-active-high;
+			regulator-always-on;
+		};
+
+		/* LVDS backlight enable as regulator */
+		reg_lvds_blen: lvds_blen_pwr_on {
+			compatible = "regulator-fixed";
+			regulator-name = "lvds_blen_pwr_on";
+			gpio = <&gpio1 9 GPIO_ACTIVE_HIGH>; /* Q7-112: LVDS_BLEN */
+			enable-active-high;
+			regulator-always-on;
 		};
 	};
 
@@ -535,6 +540,10 @@
 				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x80000000	/* Q7, GPI */
 				MX6QDL_PAD_KEY_COL4__GPIO4_IO14		0x80000000	/* Q7, GPO 0 */
 				MX6QDL_PAD_GPIO_0__GPIO1_IO00		0x80000000	/* Q7, GPO 1 */
+
+				/* LVDS backlight as GPIO */
+				/* MX6QDL_PAD_GPIO_7__GPIO1_IO07	0x80000000	*/ /* Q7 111: LVDS_PPEN */
+				/* MX6QDL_PAD_GPIO_9__GPIO1_IO09	0x80000000	*/ /* Q7 112: LVDS_BLEN */
 			>;
 		};
 
@@ -656,7 +665,7 @@
 
 		pinctrl_pwm4: pwm4grp {
 			fsl,pins = <
-				MX6QDL_PAD_SD1_CMD__PWM4_OUT 0x1b0b1
+				MX6QDL_PAD_SD1_CMD__PWM4_OUT 0x1b0b1 /* Q7-123: BL_CTRL */
 			>;
 		};
 
