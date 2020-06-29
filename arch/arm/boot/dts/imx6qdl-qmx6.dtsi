@@ -523,7 +523,6 @@
 	imx6qdl-qmx6 {
 		pinctrl_hog: hoggrp {
 			fsl,pins = <
-				MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x80000000	/* PCIE_WAKE_B */
 				MX6QDL_PAD_NANDF_WP_B__GPIO6_IO09	0x80000000	/* I2C multiplexer */
 				MX6QDL_PAD_GPIO_4__GPIO1_IO04		0x80000000	/* SD2_CD */
 				MX6QDL_PAD_NANDF_D6__GPIO2_IO06		0x80000000	/* SD4_CD# */
@@ -746,7 +745,14 @@
 				MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x17059
 			>;
 		};
-  };
+
+		pinctrl_pcie: pciegrp {
+			fsl,pins = <
+				MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x80000000	/* PCIE_WAKE_B (Q7-156)*/
+				MX6QDL_PAD_SD1_CLK__GPIO1_IO20		0x1b0b0 	/* PCIE-Reset (Q7-158)*/
+			>;
+		};
+    };
 };
 
 &can1 {
@@ -858,8 +864,18 @@
 };
 
 &pcie {
-	reset-gpio = <&gpio1 20 GPIO_ACTIVE_LOW>;
+	reset-gpio = <&gpio1 20 GPIO_ACTIVE_LOW>; /* MX6QDL_PAD_SD1_CLK__GPIO1_IO20 */
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pcie>;
 	status = "okay";
+
+	/* Adjust PCIe-Phy Tx settings (Kernel 4.14.98: CGT000005) */
+	fsl,tx-deemph-gen1 = <15>;
+	fsl,tx-deemph-gen2-3p5db = <15>;
+	fsl,tx-deemph-gen2-6db = <31>;
+	fsl,tx-swing-full = <127>;
+	fsl,tx-swing-low = <63>;
+	fsl,max-link-speed = <1>;
 };
 
 
@@ -962,14 +978,3 @@
 	status = "okay";
 };
 
-&pcie {
-	/*
-		Adjust PCIe-Phy Tx settings (Kernel 4.14.98: CGT000005)
-	*/
-	fsl,tx-deemph-gen1 = <15>;
-	fsl,tx-deemph-gen2-3p5db = <15>;
-	fsl,tx-deemph-gen2-6db = <31>;
-	fsl,tx-swing-full = <127>;
-	fsl,tx-swing-low = <63>;
-	fsl,max-link-speed = <1>;
-};
