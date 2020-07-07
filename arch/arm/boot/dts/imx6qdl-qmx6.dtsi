@@ -73,24 +73,24 @@
 			regulator-always-on;
 		};
 
-		reg_usb_otg_vbus: regulator@0 {
+		reg_usb_otg_vbus: regulator-usb-otg-vbus {
 			compatible = "regulator-fixed";
-			reg = <0>;
 			regulator-name = "usb_otg_vbus";
 			regulator-min-microvolt = <5000000>;
 			regulator-max-microvolt = <5000000>;
-			gpio = <&gpio3 22 GPIO_ACTIVE_LOW>;
+			gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
 			enable-active-high;
 			regulator-always-on;
+			vin-supply = <&swbst_reg>;
 		};
 
-		reg_usb_h1_vbus: regulator@1 {
+		reg_usb_h1_vbus: regulator-usb-h1-vbus {
 			compatible = "regulator-fixed";
-			reg = <1>;
 			regulator-name = "usb_h1_vbus";
 			regulator-min-microvolt = <5000000>;
 			regulator-max-microvolt = <5000000>;
 			regulator-always-on;
+			vin-supply = <&swbst_reg>;
 		};
 
 		reg_hdmi: regulator-hdmi {
@@ -901,6 +901,18 @@
 
 &reg_soc {
        vin-supply = <&sw1c_reg>;
+};
+
+&reg_vdd1p1 {
+	vin-supply = <&vgen5_reg>;
+};
+
+&reg_vdd2p5 {
+	vin-supply = <&vgen5_reg>;
+};
+
+&reg_vdd3p0 {
+	vin-supply = <&vgen5_reg>;
 };
 
 &snvs_poweroff {
