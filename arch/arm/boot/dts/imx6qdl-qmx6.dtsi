@@ -138,13 +138,20 @@
 					reg = <0x50>;
 				};
 
+/* mma8451 is not populated on QMX6 */
+#if 0
 				mma8451@1c {
 					compatible = "fsl,mma8451";
 					reg = <0x1c>;
 					position = <1>;
 					vdd-supply = <&reg_3p3v>;
 					vddio-supply = <&reg_3p3v>;
+					pinctrl-names = "default";
+					pinctrl-0 = <&pinctrl_i2c2_mma8451_int>;
+					interrupt-parent = <&gpio6>;
+					interrupts = <14 IRQ_TYPE_LEVEL_LOW>, <16 IRQ_TYPE_LEVEL_LOW>;
 				};
+#endif
 
 				ov564x_mipi: ov564x_mipi@3c {
 					compatible = "ovti,ov564x_mipi";
@@ -649,6 +656,16 @@
 				MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
 			 >;
 		};
+
+/* mma8451 is not populated on QMX6 */
+#if 0
+		pinctrl_i2c2_mma8451_int: i2c2mma8451intgrp {
+			fsl,pins = <
+				MX6QDL_PAD_NANDF_CS1__GPIO6_IO14 	0xb0b1 /* ACCL_INT1_IN */
+				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16 	0xb0b1 /* ACCL_INT2_IN */
+			>;
+		};
+#endif
 
 		pinctrl_i2c3: i2c3grp {
 			fsl,pins = <
