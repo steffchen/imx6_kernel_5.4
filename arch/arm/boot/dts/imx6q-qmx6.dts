@@ -63,17 +63,90 @@
       status = "okay";
 };
 
+
+/*
+On a few i.MX6 modules it has been observed that the operating voltages for
+CPU/SOC at lower core frequencies (< 1GHz) are at the bottom edge and may
+lead to system instability (especially when GPU benchmarks are in progress).
+This patch increases the operating voltages for the CPU/SOC by 75mV.
+
+Introduced in Kernel 4.14 (CGT000006: adjust i.MX6 operating values)
+*/
 &cpu0 {
-	/*
-		Improves the QMX6 reset and reboot behaviour for low CPU frequency condition (at 396MHz)
-	 	Introduced on Kernel 4.14.98 for QMX6 (CGT000003)
-	*/
 	operating-points = <
 		/* kHz    uV */
 		1200000 1275000
 		996000  1250000
 		852000  1250000
-		792000  1175000
-		396000  1175000
+		792000  1250000
+		396000  1250000
+	>;
+	fsl,soc-operating-points = <
+		/* ARM kHz  SOC-PU uV */
+		1200000 1275000
+		996000	1250000
+		852000	1250000
+		792000	1250000
+		396000	1250000
+	>;
+};
+
+
+&cpu1 {
+	operating-points = <
+		/* kHz    uV */
+		1200000 1275000
+		996000  1250000
+		852000  1250000
+		792000  1250000
+		396000  1250000
+	>;
+	fsl,soc-operating-points = <
+		/* ARM kHz  SOC-PU uV */
+		1200000 1275000
+		996000	1250000
+		852000	1250000
+		792000	1250000
+		396000	1250000
+	>;
+};
+
+
+&cpu2 {
+	operating-points = <
+		/* kHz    uV */
+		1200000 1275000
+		996000  1250000
+		852000  1250000
+		792000  1250000
+		396000  1250000
+	>;
+	fsl,soc-operating-points = <
+		/* ARM kHz  SOC-PU uV */
+		1200000 1275000
+		996000	1250000
+		852000	1250000
+		792000	1250000
+		396000	1250000
+	>;
+};
+
+
+&cpu3 {
+	operating-points = <
+		/* kHz    uV */
+		1200000 1275000
+		996000  1250000
+		852000  1250000
+		792000  1250000
+		396000  1250000
+	>;
+	fsl,soc-operating-points = <
+		/* ARM kHz  SOC-PU uV */
+		1200000 1275000
+		996000	1250000
+		852000	1250000
+		792000	1250000
+		396000	1250000
 	>;
 };
