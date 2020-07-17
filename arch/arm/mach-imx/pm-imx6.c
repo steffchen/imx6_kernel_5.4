@@ -15,6 +15,7 @@
 #include <linux/of_address.h>
 #include <linux/of_fdt.h>
 #include <linux/of_platform.h>
+#include <linux/of_gpio.h>
 #include <linux/psci.h>
 #include <linux/regmap.h>
 #include <linux/slab.h>
@@ -136,6 +137,8 @@ struct qspi_regs {
 	unsigned int value;
 	enum qspi_regs_valuetype valuetype;
 };
+
+unsigned int SUS_S3_gpio = 0;
 
 struct qspi_regs qspi_regs_imx6sx[] = {
 	{QSPI_IPCR, 0, QSPI_RETRIEVED},
@@ -661,9 +664,42 @@ static void imx6q_enable_wb(bool enable)
 	writel_relaxed(val, ccm_base + CCR);
 }
 
+static int SUS_S3_init(void)
+{
+	struct device_node *np;
+	int i, gpio;
+
+	np = of_find_compatible_node(NULL, NULL, "fsl,susp-signals");
+	if (np)
+	{
+		gpio = of_get_named_gpio(np, "gpios", 0);
+		if (gpio_is_valid(gpio))
+		{
+
+			i = gpio_request(gpio,"SUS_S3");
+			if (i < 0)
+				pr_warn("%s: error requesting SUS_S3# gpio\n", __func__);
+			else
+			{
+				gpio_direction_output(gpio, 0);
+				SUS_S3_gpio = gpio;
+				pr_info("%s: SUS_S3# gpio initialized\n",__func__);
+				return 0;
+			}
+		}
+		else
+			pr_warn("%s: no valid SUS_S3# gpio defined\n", __func__);
+	}
+	else
+		pr_warn("%s: no valid node found\n", __func__);
+
+	return -EINVAL;
+}
+
 int imx6_set_lpm(enum mxc_cpu_pwr_mode mode)
 {
 	u32 val = readl_relaxed(ccm_base + CLPCR);
+	u32 flag = 0;
 
 	val &= ~BM_CLPCR_LPM;
 	switch (mode) {
@@ -696,12 +732,14 @@ int imx6_set_lpm(enum mxc_cpu_pwr_mode mode)
 		val |= 0x1 << BP_CLPCR_LPM;
 		val &= ~BM_CLPCR_VSTBY;
 		val &= ~BM_CLPCR_SBYOS;
+		flag = 1;
 		break;
 	case STOP_POWER_OFF:
 		val |= 0x2 << BP_CLPCR_LPM;
 		val |= 0x3 << BP_CLPCR_STBY_COUNT;
 		val |= BM_CLPCR_VSTBY;
 		val |= BM_CLPCR_SBYOS;
+		flag = 1;
 		if (cpu_is_imx6sl() || cpu_is_imx6sx() || cpu_is_imx6sll())
 			val |= BM_CLPCR_BYPASS_PMIC_READY;
 		if (cpu_is_imx6sl() || cpu_is_imx6sx() || cpu_is_imx6ul() ||
@@ -740,6 +778,12 @@ int imx6_set_lpm(enum mxc_cpu_pwr_mode mode)
 	writel_relaxed(val, ccm_base + CLPCR);
 	if (mode != WAIT_CLOCKED)
 		imx_gpc_hwirq_mask(0);
+
+	if(!SUS_S3_gpio)
+		SUS_S3_init();
+
+	if (flag && SUS_S3_gpio)
+		gpio_set_value(SUS_S3_gpio, 1);
 
 	return 0;
 }
@@ -950,6 +994,9 @@ static int imx6q_pm_enter(suspend_state_t state)
 		imx_gpc_release_m4_in_sleep();
 	}
 #endif
+
+	if (SUS_S3_gpio)
+		gpio_set_value(SUS_S3_gpio, 0);
 
 	return 0;
 }
