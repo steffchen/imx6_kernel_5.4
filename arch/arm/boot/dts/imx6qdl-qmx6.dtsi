@@ -483,6 +483,20 @@
 	};
 };
 
+
+/* The SPI interface on the Q7 connector (Pin 199 - 203) */
+&ecspi3 {
+	fsl,spi-num-chipselects = <2>;
+	cs-gpios = <&gpio4 24 GPIO_ACTIVE_LOW>,
+			   <&gpio4 25 GPIO_ACTIVE_LOW>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_ecspi3>;
+
+	/* disabled by default */
+	status = "disabled";
+};
+
+
 &fec {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_enet>;
@@ -574,6 +588,19 @@
 				MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
 				MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		0x100b1
 				MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		0x100b1
+			>;
+		};
+
+		pinctrl_ecspi3: ecspi3grp {
+			fsl,pins = <
+				/* configure with schmitt trigger input, medium speed, 40Ohm drive strength, fast slew rate */
+				MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1		/* Q7, SPI_SCK */
+				MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1		/* Q7, SPI_MOSI */
+				MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1		/* Q7, SPI_MISO */
+
+				/* use GPIOs as chip selects as mentioned in fsl-imx-cspi.txt docu (native chip select lines have issues) */
+				MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24	0x80000000	/* Q7, SPI_CS0# */
+				MX6QDL_PAD_DISP0_DAT4__GPIO4_IO25	0x80000000	/* Q7, SPI_CS1# */
 			>;
 		};
 
