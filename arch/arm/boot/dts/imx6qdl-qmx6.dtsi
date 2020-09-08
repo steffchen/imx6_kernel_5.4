@@ -456,12 +456,14 @@
 	dma-names = "rx", "tx";
 	status = "okay";
 
+	/* 4MiB onboard SPI NOR flash */
 	flash: m25p80@0 {
 		#address-cells = <1>;
 		#size-cells = <1>;
-		compatible = "st,sst25vf032b";
+		compatible = "st,sst25vf032b", "jedec,spi-nor";
 		spi-max-frequency = <20000000>;
 		reg = <0>;
+		m25p,fast-read;
 
 		partition@0 {
 			label = "bootloader";
