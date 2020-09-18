@@ -538,7 +538,14 @@
 	rtc: m41t62@68 {
 		compatible = "st,m41t62";
 		reg = <0x68>;
-    };
+
+		/* IRQ definition: MX6QDL_PAD_NANDF_D5__GPIO2_IO05 */
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_rtc>;
+		interrupt-parent = <&gpio2>;
+		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
+		wakeup-source;
+	};
 };
 
 &iomuxc {
@@ -704,6 +711,12 @@
 			fsl,pins = <
 				MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
 				MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
+			>;
+		};
+
+		pinctrl_rtc: rtcgrp {
+			fsl,pins = <
+				MX6QDL_PAD_NANDF_D5__GPIO2_IO05	0xb0b1	/* RTC IRQ pin */
 			>;
 		};
 
